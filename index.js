@@ -22,16 +22,22 @@ app.get("/api/:date?",(req,res)=>{
       utc: new Date(dateNow).toUTCString()
     });
   }else{
-    var dateReq=new Date(parseInt(req.params.date)).toString();
-    console.log(dateReq)
-    if(dateReq=='Invalid Date'){
+    let dateVal=req.params.date;
+    //verify if date is in unix format
+    if(!isNaN(dateVal) && !isNaN(parseFloat(dateVal)) && dateVal.length <= 13){
+      dateVal = parseInt(req.params.date);
+    }
+    
+    dateVal = new Date(dateVal);
+    console.log(dateVal)
+    if(dateVal=='Invalid Date'){
       res.json({
         error : "Invalid Date"
       });
     }else{
       res.json({
-        unix: Date.parse(dateReq),
-        utc:new Date(parseInt(req.params.date)).toUTCString()
+        unix: Date.parse(dateVal),
+        utc:dateVal.toUTCString()
       });
     }
   }
